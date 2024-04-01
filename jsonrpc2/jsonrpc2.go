@@ -7,7 +7,7 @@ import (
 	"github.com/monaco-io/request"
 )
 
-type JSONRPC2 struct {
+type JSONRPC2Request struct {
 	Version string        `json:"jsonrpc"`
 	Method  string        `json:"method"`
 	Params  []interface{} `json:"params"`
@@ -29,11 +29,11 @@ type JSONRPC2Error struct {
 
 type JSONRPC2Client struct {
 	URL  string
-	Data JSONRPC2
+	Data JSONRPC2Request
 }
 
 func (c *JSONRPC2Client) NewRequest(method string, params []interface{}) {
-	c.Data = JSONRPC2{
+	c.Data = JSONRPC2Request{
 		ID:      "1",
 		Version: "2.0",
 		Method:  method,
@@ -66,7 +66,7 @@ func (c *JSONRPC2Client) Send() (*JSONRPC2Response, error) {
 	return resp, nil
 }
 
-func SendRequest(url string, data JSONRPC2) (*JSONRPC2Response, error) {
+func SendRequest(url string, data JSONRPC2Request) (*JSONRPC2Response, error) {
 	var result JSONRPC2Response
 
 	resp := request.
@@ -89,5 +89,14 @@ func SendRequest(url string, data JSONRPC2) (*JSONRPC2Response, error) {
 func NewClient(url string) *JSONRPC2Client {
 	return &JSONRPC2Client{
 		URL: url,
+	}
+}
+
+func NewJSONRPC2Request(method string, params []interface{}) *JSONRPC2Request {
+	return &JSONRPC2Request{
+		Version: "2.0",
+		Method:  method,
+		Params:  params,
+		ID:      "1",
 	}
 }
